@@ -1,30 +1,24 @@
 (function (){
   window.onload = function(){
     var msgbox = document.getElementById("msgs");
-    var form = document.getElementById("form");
-    var send_msg = document.getElementById("send_msg");
-    var ws = new WebSocket('ws://' + "localhost");
+    var green= document.getElementById('green');
 
-    ws.onopen = function() { 
-      console.log("connection opened");
-    }
-    ws.onclose = function() { 
-      console.log("connection closed");
-    }
-    ws.onmessage = function(m) {
-      var li = document.createElement("li");
-      li.textContent = m.data;
-      msgbox.insertBefore(li, msgbox.firstChild);
-    }
+    green.addEventListener("click", function(){
+      var ws = new WebSocket('ws://' + "localhost");
 
-    send_msg.onclick = function(){
-      send_msg.value = ""; 
-    }
-
-    form.onsubmit = function(){
-      ws.send(send_msg.value);
-      send_msg.value = "";
-      return false;
-    }
+      ws.onopen = function() {
+        console.log("connection opened");
+        ws.send("test message");
+        ws.closed();
+      }
+      ws.onclose = function() {
+        console.log("connection closed");
+      }
+      ws.onmessage = function(m) {
+        var li = document.createElement("li");
+        li.textContent = m.data;
+        msgbox.insertBefore(li, msgbox.firstChild);
+      }
+    });
   }
 })();
